@@ -42,10 +42,23 @@ function startGame() {
     map = Cel.iterate(map);
     edgeFill();
     map = Dij.singulars(map,cell_count);
-    renderMap();
-    areas = Dij.scan_area(map,cell_count);
-    setTimeout(color, 2000);
 }
+function* tmp() {
+    alert("starting render");
+    renderMap();
+    alert("render over");
+    yield;
+    alert("starting dijkstra");
+    areas = Dij.scan_area(map,cell_count);
+    alert("dijkstra over");
+    yield;
+    console.log(areas);
+    color();
+}
+let gen = tmp();
+canvas.addEventListener("click", () => {
+    gen.next();
+})
 
 function renderMap() {
     ctx.fillStyle = "#fff";
@@ -76,14 +89,15 @@ function edgeFill() {
 }
 
 function color() {
-    let colors = ["red","blue","green","orange","yellow","purple","brown", "red", "red", "red", "red", "red", "red", "red"];
+    let colors = ["#FF0000","#00FF00","#0000FF","#FFa500","#FFFF00","#800080","#FF0000","#00FF00","#0000FF","#FFa500","#FFFF00","#800080","#FF0000","#00FF00","#0000FF","#FFa500","#FFFF00","#800080"];
     console.log(areas);
-    /*for (let i=0; i<areas.lenght; i++){
+    alert("C");
+    for (let i=0; i<areas.length; i++){
         let area_cells = areas[i];
         ctx.fillStyle = colors[i];
         for (let j=0; j<area_cells.length; j++){
             let cell = area_cells[j];
             ctx.fillRect(cell.column * cell_size, cell.row * cell_size, cell_size, cell_size);
         }
-    }*/
+    }
 }

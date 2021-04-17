@@ -39,16 +39,18 @@ export default class DM {
         for (let i=1; i<cell_count.vert-1; i++){
             for (let j=1; j<cell_count.hor-1; j++){
                 let row = marker_map[i];
-                let cell = row[j];
-                if (cell == 1){
+                if (marker_map[i][j] == 1){
+                    console.time("a");
                     let area = this.dijkstra(i,j, marker_map);
                     areas.push(area);
-                    return areas;
                     for (let o=0; o<area.length; o++){
                         let y = area[o].row;
                         let x = area[o].column;
                         marker_map[y][x] = 0;
                     }
+                    //return areas;
+                    alert("area mapped");
+                    console.timeEnd("a");
                 }
             }
         }
@@ -61,31 +63,23 @@ export default class DM {
         while(processing_array.length > 0) {
             let y = processing_array[0].row;
             let x = processing_array[0].column;
-            let row = map[y];
             
-            area_array.push({row: y, column: x});
-            
-            let proxy = map[y-1];
-            let pr = y-1;
-            if (proxy[x] == 1) {
-                processing_array.push({row: pr, column: x});
-                map[pr][x] = 0;
+            if (map[y][x] == 1){
+                area_array.push({row: y, column: x});
+                map[y][x] = 0;
             }
-            let pc = x-1;
-            if (row[pc] == 1) {
-                processing_array.push({row: y, column: pc});
-                map[y][pc] = 0;
+
+            if (map[y-1][x] == 1){
+                processing_array.push({row: y-1, column: x});
             }
-            pc = x+1;
-            if (row[pc] == 1) {
-                processing_array.push({row: y, column: pc});
-                map[y][pc] = 0;
+            if (map[y+1][x] == 1){
+                processing_array.push({row: y+1, column: x});
             }
-            proxy = map[y+1];
-            pr = y+1;
-            if (proxy[x] == 1) {
-                processing_array.push({row: pr, column: x});
-                map[pr][x] = 0;
+            if (map[y][x-1] == 1){
+                processing_array.push({row: y, column: x-1});
+            }
+            if (map[y][x+1] == 1){
+                processing_array.push({row: y, column: x+1});
             }
             processing_array.splice(0,1);
         }
