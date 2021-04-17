@@ -1,0 +1,49 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  min-height: 100vh;
+}
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(19, 19, 19);
+}
+
+#startScreen button {
+  font-size: 5vh;
+  border: none;
+  padding: 2vh;
+  min-width: 40vh;
+}
+#content {
+  opacity: 0;
+  display: none;
+}
+
+.fade-out {
+  animation: fade-out 0.3s linear forwards;
+}
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.fade-in {
+  animation: fade-in 0.3s linear forwards;
+}
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
