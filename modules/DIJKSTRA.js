@@ -33,7 +33,8 @@ export default class DM {
         }
     }
     scan_area(map, cell_count) {
-        let marker_map = map;
+        let marker_map = Array();
+        marker_map = JSON.parse(JSON.stringify(map));
         let areas = Array();
 
         for (let i=1; i<cell_count.vert-1; i++){
@@ -41,11 +42,6 @@ export default class DM {
                 if (marker_map[i][j] == 1){
                     let area = this.dijkstra(i,j, marker_map);
                     areas.push(area);
-                    for (let o=0; o<area.length; o++){
-                        let y = area[o].row;
-                        let x = area[o].column;
-                        marker_map[y][x] = 0;
-                    }
                 }
             }
         }

@@ -16,6 +16,7 @@ let cell_count = {
 let cell_size;
 let map;
 let areas;
+let min_area = 15;
 
 document.getElementById("startScreen").onanimationstart = () => {
     HEIGHT = Math.round(window.innerHeight * 0.8);
@@ -58,7 +59,10 @@ function* tmp() {
     renderMap();
     yield;
     areas = Dij.scan_area(map,cell_count);
-    console.log(areas);
+    color();
+    yield;
+    areaCheckSize();
+    renderMap();
     color();
 }
 let gen = tmp();
@@ -103,5 +107,21 @@ function color() {
             let cell = area_cells[j];
             ctx.fillRect(cell.column * cell_size, cell.row * cell_size, cell_size, cell_size);
         }
+    }
+}
+
+function areaCheckSize() {
+    for (let i=areas.length-1; i>=0; i--){
+        if (areas[i].length < min_area){
+            areaDelete(areas[i]);
+            areas.splice(i,1);
+        }
+    }
+}
+function areaDelete(area){
+    for (let i=0; i<area.length; i++){
+        let x = area[i].column;
+        let y = area[i].row;
+        map[y][x] = 0;
     }
 }
