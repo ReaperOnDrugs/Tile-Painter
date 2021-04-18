@@ -34,7 +34,8 @@ function varInit() {
     Cel = new CA(cell_count.hor,cell_count.vert);
     Dij = new DM();
     cell_size = HEIGHT / cell_count.vert;
-    startGame();
+    gen.next();
+    //startGame();
 }
 
 function startGame() {
@@ -44,14 +45,19 @@ function startGame() {
     map = Dij.singulars(map,cell_count);
 }
 function* tmp() {
-    alert("starting render");
+    map = Noise.generate(cell_count.vert,cell_count.hor, 55);
     renderMap();
-    alert("render over");
     yield;
-    alert("starting dijkstra");
+    map = Cel.iterate(map);
+    renderMap();
+    yield;
+    edgeFill();
+    renderMap();
+    yield;
+    map = Dij.singulars(map,cell_count);
+    renderMap();
+    yield;
     areas = Dij.scan_area(map,cell_count);
-    alert("dijkstra over");
-    yield;
     console.log(areas);
     color();
 }
@@ -89,9 +95,7 @@ function edgeFill() {
 }
 
 function color() {
-    let colors = ["#FF0000","#00FF00","#0000FF","#FFa500","#FFFF00","#800080","#FF0000","#00FF00","#0000FF","#FFa500","#FFFF00","#800080","#FF0000","#00FF00","#0000FF","#FFa500","#FFFF00","#800080"];
-    console.log(areas);
-    alert("C");
+    let colors = ["red","blue","lightgreen","yellow","brown","purple","cyan","pink","gray","magenta","darkgreen","darkred"];
     for (let i=0; i<areas.length; i++){
         let area_cells = areas[i];
         ctx.fillStyle = colors[i];

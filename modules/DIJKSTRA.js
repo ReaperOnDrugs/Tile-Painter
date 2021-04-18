@@ -38,9 +38,7 @@ export default class DM {
 
         for (let i=1; i<cell_count.vert-1; i++){
             for (let j=1; j<cell_count.hor-1; j++){
-                let row = marker_map[i];
                 if (marker_map[i][j] == 1){
-                    console.time("a");
                     let area = this.dijkstra(i,j, marker_map);
                     areas.push(area);
                     for (let o=0; o<area.length; o++){
@@ -48,9 +46,6 @@ export default class DM {
                         let x = area[o].column;
                         marker_map[y][x] = 0;
                     }
-                    //return areas;
-                    alert("area mapped");
-                    console.timeEnd("a");
                 }
             }
         }
@@ -58,31 +53,33 @@ export default class DM {
     }
     dijkstra(i, j, map) {
         let area_array = Array();
-        let processing_array = Array();
-        processing_array.push({row: i, column: j});
-        while(processing_array.length > 0) {
-            let y = processing_array[0].row;
-            let x = processing_array[0].column;
-            
-            if (map[y][x] == 1){
-                area_array.push({row: y, column: x});
-                map[y][x] = 0;
-            }
+        let queue = Array();
+        queue.push({"row": i, "column": j});
 
-            if (map[y-1][x] == 1){
-                processing_array.push({row: y-1, column: x});
+        while (queue.length) {
+            let current = queue.shift();
+            let x = current.column;
+            let y = current.row;
+
+            if (map[y][x] == 1){
+                area_array.push({"row": y, "column": x})
+                map[y][x] = 0;
+
+                if (map[y-1][x] == 1) {
+                    queue.push({"row": y-1, "column": x});
+                }
+                if (map[y+1][x] == 1){
+                    queue.push({"row": y+1, "column": x});
+                }
+                if (map[y][x-1] == 1){
+                    queue.push({"row": y, "column": x-1});
+                }
+                if (map[y][x+1] == 1){
+                    queue.push({"row": y, "column": x+1});
+                }
             }
-            if (map[y+1][x] == 1){
-                processing_array.push({row: y+1, column: x});
-            }
-            if (map[y][x-1] == 1){
-                processing_array.push({row: y, column: x-1});
-            }
-            if (map[y][x+1] == 1){
-                processing_array.push({row: y, column: x+1});
-            }
-            processing_array.splice(0,1);
         }
+
         return area_array;
     }
 }
