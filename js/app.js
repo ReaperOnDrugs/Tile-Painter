@@ -1,6 +1,7 @@
 import NG from "../modules/NOISE.js";
 import CA from "../modules/Celular_Automaton.js";
 import DM from "../modules/DIJKSTRA.js";
+import TM from "../modules/Texture_manager.js";
 
 let canvas = document.querySelector("canvas");
 let ctx = canvas.getContext("2d");
@@ -9,6 +10,7 @@ let WIDTH;
 let Noise;
 let Cel;
 let Dij;
+let Tex;
 let cell_count = {
     hor: 60,
     vert: 30
@@ -34,6 +36,7 @@ function varInit() {
     Noise = new NG();
     Cel = new CA(cell_count.hor,cell_count.vert);
     Dij = new DM();
+    Tex = new TM();
     cell_size = HEIGHT / cell_count.vert;
     gen.next();
     //startGame();
@@ -64,6 +67,12 @@ function* tmp() {
     areaCheckSize();
     renderMap();
     color();
+    yield;
+    Tex.encase(ctx,cell_count,cell_size);
+    yield;
+    Tex.floor(ctx, cell_size, areas);
+    yield;
+    Tex.pillar(ctx, map, cell_count, cell_size);
 }
 let gen = tmp();
 canvas.addEventListener("click", () => {
@@ -125,3 +134,21 @@ function areaDelete(area){
         map[y][x] = 0;
     }
 }
+
+/*function drawChest() {
+    let img = document.createElement("img")
+    img.src = "./assets/textures/wall-mid.png";
+    img.onload = function() {
+        ctx.drawImage(img,1,1,cell_size,cell_size);
+    }
+}
+function drawChest2() {
+    let img = document.createElement("img")
+    img.src = "./chest.png";
+    img.onload = function() {
+        ctx.translate(cell_size*1.5,cell_size*1.5);
+        ctx.rotate(90*Math.PI/180);
+        ctx.translate(-cell_size*1.5,-cell_size*1.5);
+        ctx.drawImage(img,cell_size,cell_size,cell_size,cell_size);
+    }
+}*/
