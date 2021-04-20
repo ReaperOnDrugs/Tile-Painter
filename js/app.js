@@ -67,11 +67,11 @@ function* tmp() {
     color();
     yield;
     areaConnect();
-    /*Tex.encase(ctx,cell_count,cell_size);
+    Tex.encase(ctx,cell_count,cell_size);
     yield;
     Tex.floor(ctx, cell_size, areas);
     yield;
-    Tex.pillar(ctx, map, cell_count, cell_size);*/
+    Tex.pillar(ctx, map, cell_count, cell_size);
 }
 let gen = tmp();
 canvas.addEventListener("click", () => {
@@ -142,6 +142,7 @@ function areaConnect() {
         ctx.fillStyle = "white";
         ctx.fillRect(capital1.column*cell_size,capital1.row*cell_size,cell_size,cell_size);
     }*/
+    let capitals = Array();
     for (let i=areas.length-1; i>=0; i--){
         let area1 = areas[i];
         let capital1 = getCapital(area1);
@@ -149,9 +150,21 @@ function areaConnect() {
             areas.splice(i,1);
             continue;
         }
+        capitals.push(capital1);
     }
     renderMap();
     color();
+    for (let i=0; i<capitals.length; i++){
+        let capital = capitals[i];
+        if (i < capitals.length-1){
+            ctx.moveTo(capital.column*cell_size + cell_size/2,capital.row*cell_size + cell_size/2);
+            let c2 = capitals[i+1];
+            ctx.lineTo(c2.column*cell_size + cell_size/2,c2.row*cell_size + cell_size/2);
+            ctx.strokeStyle = "White";
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+    }
 }
 function getCapital(ar) {
     let candidates = Array();
