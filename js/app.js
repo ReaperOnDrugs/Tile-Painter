@@ -67,12 +67,12 @@ function* tmp() {
     color();
     yield;
     areaConnect();
+    renderMap();
     Tex.encase(ctx,cell_count,cell_size);
     yield;
     Tex.floor(ctx, cell_size, areas);
     yield;
     Tex.pillar(ctx, map, cell_count, cell_size);
-    areaConnect();
 }
 let gen = tmp();
 canvas.addEventListener("click", () => {
@@ -135,36 +135,65 @@ function areaDelete(area){
     }
 }
 function areaConnect() {
-    /*while (areas.length > 1){
+    while (areas.length > 1){
+        let hall = Array();
         let area1 = areas[0];
         let area2 = areas[1];
         let capital1 = getCapital(area1);
-        console.log(capital1);
-        ctx.fillStyle = "white";
-        ctx.fillRect(capital1.column*cell_size,capital1.row*cell_size,cell_size,cell_size);
-        -- connect 2 areas --
-        -- code below marks hallways --
-    }*/
-    let capitals = Array();
-    for (let i=areas.length-1; i>=0; i--){
-        let area1 = areas[i];
-        let capital1 = getCapital(area1);
-        if (capital1 == "none"){
-            areas.splice(i,1);
-            continue;
+        let capital2 = getCapital(area2);
+
+        let x = capital1.column;
+        let y = capital1.row;
+
+        let dx = capital2.column - capital1.column;
+        let dy = capital2.row - capital1.row;
+
+        let inverted = false;
+        let step = Math.sign(dx);
+        let gradientStep = Math.sign(dy);
+        let long = Math.abs(dx);
+        let short = Math.abs(dy);
+
+        if (long < short){
+            inverted = true;
+            long = Math.abs(dy);
+            short = Math.abs(dx);
+            step = Math.sign(dy);
+            gradientStep = Math.sign(dx);
         }
-        capitals.push(capital1);
-    }
-    for (let i=0; i<capitals.length; i++){
-        let capital = capitals[i];
-        if (i < capitals.length-1){
-            ctx.moveTo(capital.column*cell_size + cell_size/2,capital.row*cell_size + cell_size/2);
-            let c2 = capitals[i+1];
-            ctx.lineTo(c2.column*cell_size + cell_size/2,c2.row*cell_size + cell_size/2);
-            ctx.strokeStyle = "White";
-            ctx.lineWidth = 3;
-            ctx.stroke();
+        let GA = long / 2;
+
+        for (let i=0; i<long; i++){
+            hall.push({"row": y, "column": x});
+            if (inverted){
+                y += step;
+            }
+            else {
+                x += step;
+            }
+            GA += short;
+            if (GA >= long){
+                if (inverted){
+                    x += gradientStep;
+                }
+                else {
+                    y += gradientStep;
+                }
+                GA -= long;
+            }
+            console.log(y,",",x);
         }
+        ctx.fillStyle = "White";
+        for (let i=0; i<hall.length; i++){
+            let x1 = hall[i].column;
+            let y1 = hall[i].row;
+            for (let j=-1; j<2; j++){
+                for (let o=-1; o<2; o++){
+                    map[y1-j][x1-o] = 1;
+                }
+            }
+        }
+        areas = Dij.scan_area(map,cell_count);
     }
 }
 function getCapital(ar) {
