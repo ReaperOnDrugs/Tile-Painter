@@ -72,6 +72,7 @@ function* tmp() {
     Tex.floor(ctx, cell_size, areas);
     yield;
     Tex.pillar(ctx, map, cell_count, cell_size);
+    areaConnect();
 }
 let gen = tmp();
 canvas.addEventListener("click", () => {
@@ -152,8 +153,6 @@ function areaConnect() {
         }
         capitals.push(capital1);
     }
-    renderMap();
-    color();
     for (let i=0; i<capitals.length; i++){
         let capital = capitals[i];
         if (i < capitals.length-1){
