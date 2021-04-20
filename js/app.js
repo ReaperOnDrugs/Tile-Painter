@@ -142,6 +142,8 @@ function areaConnect() {
         console.log(capital1);
         ctx.fillStyle = "white";
         ctx.fillRect(capital1.column*cell_size,capital1.row*cell_size,cell_size,cell_size);
+        -- connect 2 areas --
+        -- code below marks hallways --
     }*/
     let capitals = Array();
     for (let i=areas.length-1; i>=0; i--){
