@@ -62,17 +62,16 @@ function* tmp() {
     renderMap();
     yield;
     areas = Dij.scan_area(map,cell_count);
-    color();
-    yield;
     areaCheckSize();
     renderMap();
     color();
     yield;
-    Tex.encase(ctx,cell_count,cell_size);
+    areaConnect();
+    /*Tex.encase(ctx,cell_count,cell_size);
     yield;
     Tex.floor(ctx, cell_size, areas);
     yield;
-    Tex.pillar(ctx, map, cell_count, cell_size);
+    Tex.pillar(ctx, map, cell_count, cell_size);*/
 }
 let gen = tmp();
 canvas.addEventListener("click", () => {
@@ -134,21 +133,44 @@ function areaDelete(area){
         map[y][x] = 0;
     }
 }
-
-/*function drawChest() {
-    let img = document.createElement("img")
-    img.src = "./assets/textures/wall-mid.png";
-    img.onload = function() {
-        ctx.drawImage(img,1,1,cell_size,cell_size);
+function areaConnect() {
+    /*while (areas.length > 1){
+        let area1 = areas[0];
+        let area2 = areas[1];
+        let capital1 = getCapital(area1);
+        console.log(capital1);
+        ctx.fillStyle = "white";
+        ctx.fillRect(capital1.column*cell_size,capital1.row*cell_size,cell_size,cell_size);
+    }*/
+    for (let i=areas.length-1; i>=0; i--){
+        let area1 = areas[i];
+        let capital1 = getCapital(area1);
+        if (capital1 == "none"){
+            areas.splice(i,1);
+            continue;
+        }
     }
+    renderMap();
+    color();
 }
-function drawChest2() {
-    let img = document.createElement("img")
-    img.src = "./chest.png";
-    img.onload = function() {
-        ctx.translate(cell_size*1.5,cell_size*1.5);
-        ctx.rotate(90*Math.PI/180);
-        ctx.translate(-cell_size*1.5,-cell_size*1.5);
-        ctx.drawImage(img,cell_size,cell_size,cell_size,cell_size);
+function getCapital(ar) {
+    let candidates = Array();
+    for (let i=0 ; i<ar.length; i++){
+        let neighbourCount = 0;
+        let cell = ar[i];
+        for (let j=-1; j<2; j++){
+            for (let o=-1; o<2; o++){
+                neighbourCount += map[cell.row-j][cell.column-o];
+            }
+        }
+        if(neighbourCount == 9){
+            candidates.push(ar[i]);
+        }
     }
-}*/
+    let rand = Math.floor(Math.random() * (candidates.length-1));
+    if (candidates.length == 0){
+        areaDelete(ar);
+        return "none";
+    }
+    return candidates[rand];
+}
