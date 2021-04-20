@@ -74,4 +74,17 @@ export default class TM {
             }
         }
     }
+    walloff(ctx, map, cell_size, cell_count) {
+        for (let i=0; i<cell_count.vert; i++){
+            for (let j=0; j<cell_count.hor; j++){
+                if (map[i][j] == 0){
+                    let img = new Image();
+                    img.src = this.path + this.textures.wall_default;
+                    img.onload = function() {
+                        ctx.drawImage(img,j*cell_size,i*cell_size,cell_size,cell_size);
+                    }
+                }
+            }
+        }
+    }
 }

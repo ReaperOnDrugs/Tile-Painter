@@ -73,6 +73,8 @@ function* tmp() {
     Tex.floor(ctx, cell_size, areas);
     yield;
     Tex.pillar(ctx, map, cell_count, cell_size);
+    yield;
+    Tex.walloff(ctx, map, cell_size, cell_count);
 }
 let gen = tmp();
 canvas.addEventListener("click", () => {
