@@ -1,7 +1,6 @@
 import NG from "../modules/NOISE.js";
 import CA from "../modules/Celular_Automaton.js";
 import DM from "../modules/DIJKSTRA.js";
-import TM from "../modules/Texture_manager.js";
 
 let canvas = document.querySelector("canvas");
 let ctx = canvas.getContext("2d");
@@ -10,7 +9,6 @@ let WIDTH;
 let Noise;
 let Cel;
 let Dij;
-let Tex;
 let cell_count = {
     hor: 60,
     vert: 30
@@ -36,7 +34,6 @@ function varInit() {
     Noise = new NG();
     Cel = new CA(cell_count.hor,cell_count.vert);
     Dij = new DM();
-    Tex = new TM();
     cell_size = HEIGHT / cell_count.vert;
     gen.next();
     //startGame();
@@ -68,13 +65,6 @@ function* tmp() {
     yield;
     areaConnect();
     renderMap();
-    Tex.encase(ctx,cell_count,cell_size);
-    yield;
-    Tex.floor(ctx, cell_size, areas);
-    yield;
-    Tex.pillar(ctx, map, cell_count, cell_size);
-    yield;
-    Tex.walloff(ctx, map, cell_size, cell_count);
 }
 let gen = tmp();
 canvas.addEventListener("click", () => {
